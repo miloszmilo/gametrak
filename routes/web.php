@@ -24,6 +24,13 @@ Route::get('/game/{id}', function ($id) {
     ]);
 })->name('game');
 
+Route::get('/search/{name}', function ($name) {
+    $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
+    return Inertia::render('search', [
+        'games' => $games,
+    ]);
+})->name('search');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

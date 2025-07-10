@@ -19,10 +19,10 @@ return new class extends Migration
             $table->integer('status'); // 0 - not planned, 1 - planning, 2 - playing, 3 - finished, 4 - dropped
             $table->timestamps();
         });
-        // DB::statement('
-        //     ALTER TABLE user_game_status
-        //     ADD CONSTRAINT status CHECK (status >= 0 AND status <= 4)
-        // ');
+        /* DB::statement('
+            ALTER TABLE user_game_status
+            ADD CONSTRAINT status CHECK (status >= 0 AND status <= 4)
+        '); */
     }
 
     /**
