@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Game;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -8,10 +9,12 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/game/{id}', function ($id) {
+    $game = Game::all()->where('id', $id);
     return Inertia::render('game', [
         'id' => $id,
+        'game' => $game,
     ]);
-})->whereNumber('id')->name('game');
+})->name('game');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
