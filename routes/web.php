@@ -8,8 +8,16 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+# HACK: get all games list to find the uuid
+Route::get('/games', function () {
+    $games = Game::all();
+    return Inertia::render('games', [
+        'games' => $games,
+    ]);
+})->name('all_games');
+
 Route::get('/game/{id}', function ($id) {
-    $game = Game::all()->where('id', $id);
+    $game = Game::where('id', $id)->first();
     return Inertia::render('game', [
         'id' => $id,
         'game' => $game,
