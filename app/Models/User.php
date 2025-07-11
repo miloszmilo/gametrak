@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasUuids;
-    protected $primaryKey = 'uuid';
+    // protected $primaryKey = 'uuid';
 
 
     /**
