@@ -3,7 +3,11 @@ export default function ({ games }: { games: Array<any> }) {
         <div>
             <ul>
                 {games.map((game, index) => {
-                    return <li key="index">{game.name}</li>;
+                    return (
+                        <li key="index">
+                            {game.uuid} {game.name}
+                        </li>
+                    );
                 })}
             </ul>
         </div>

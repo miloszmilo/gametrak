@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class UserGameStatus extends Model
 {
     use HasUuids;
-    protected $primaryKey = 'uuid';
-    protected $keyType = "string";
-    public $incrementing = false;
+    protected $primaryKey = 'id';
 
     public $fillable = [
         'status',

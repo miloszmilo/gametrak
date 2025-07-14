@@ -37,6 +37,12 @@ export default function Game({ id, game }: { id: number; game: any }) {
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
+            <select>
+                <option>Plan to play</option>
+                <option>Playing</option>
+                <option>Completed</option>
+                <option>Dropped</option>
+            </select>
         </div>
     );
 }
