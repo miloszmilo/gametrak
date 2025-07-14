@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { GameStatus } from '../types/index.d.ts';
+
 export type Game = {
     name: string;
     release_year: string;
@@ -9,7 +12,29 @@ export type Game = {
 };
 
 export default function Game({ id, game }: { id: number; game: any }) {
-    console.log(game);
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    function updateGameStatus(e) {
+        setError('');
+        setIsLoading(true);
+        console.log(e.target.value);
+
+        // get user id inside php
+        // for currently logged in user
+        // send request
+        const gameId = game.id;
+        const status: GameStatus = e.target.value.trim().toLowerCase();
+        if (!Object.values(GameStatus).includes(status)) {
+            setError("Game status isn't valid. Try again.");
+            setIsLoading(false);
+            return;
+        }
+        fetch(`/update-game-status/${gameId}`, {
+            method: 'POST',
+        });
+        setIsLoading(false);
+    }
+
     return (
         <div>
             <div>
@@ -37,12 +62,13 @@ export default function Game({ id, game }: { id: number; game: any }) {
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <select>
-                <option>Plan to play</option>
-                <option>Playing</option>
-                <option>Completed</option>
-                <option>Dropped</option>
+            <select onChange={updateGameStatus} disabled={isLoading}>
+                <option value="planning">Plan to play</option>
+                <option value="playing">Playing</option>
+                <option value="completed">Completed</option>
+                <option value="dropped">Dropped</option>
             </select>
+            {error && <span>{error}</span>}
         </div>
     );
 }
