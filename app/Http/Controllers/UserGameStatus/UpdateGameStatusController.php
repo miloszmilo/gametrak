@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\GameStatus;
+namespace App\Http\Controllers\UserGameStatus;
 
 use App\Http\Controllers\Controller;
 use App\Models\Game;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
-$GAME_STATUSES = ['planning', 'playing', 'completed', 'dropped'];
+const VALID_GAME_STATUSES = ['not planning', 'planning', 'playing', 'completed', 'dropped'];
 
 class UpdateGameStatusController extends Controller {
     /**
@@ -19,18 +19,44 @@ class UpdateGameStatusController extends Controller {
      */
     public function store(Request $request): Response {
         $request->validate([
-            'game_id' => ['required', 'uuid:4', 'size:36'],
-            'status' => ['required', Rule::in(GAME_STATUSES)],
+            'game_id' => ['required', 'uuid:7', 'size:36'],
+            'status' => ['required', Rule::in(VALID_GAME_STATUSES)],
         ]);
 
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
         $game_id = $request->string('game_id')->trim();
         $status = $request->string('status')->trim();
+        $integer_status = $this->statusToInteger($status);
 
         UserGameStatus::updateOrCreate([
             ['user_id' => $user_id, 'game_id' => $game_id],
-            ['status' => $status]
+            ['status' => $integer_status]
         ]);
+
+        return back()->with('status', 'updated successfully');
+    }
+
+    private function statusToInteger(string $status): int {
+        switch ($status) {
+            case 'not planning':
+                return 0;
+                break;
+            case 'planning':
+                return 1;
+                break;
+            case 'playing':
+                return 2;
+                break;
+            case 'completed':
+                return 3;
+                break;
+            case 'dropped':
+                return 4;
+                break;
+            default:
+                return 0;
+                break;
+        }
     }
 
     /**
@@ -42,7 +68,6 @@ class UpdateGameStatusController extends Controller {
             $isLoggedIn = true;
         }
         $game = Game::where('id', $request->string('id'))->first();
-        dd($request->string('uuid'));
         return Inertia::render("game", [
             'id' => $request->string('id'),
             'game' => $game,

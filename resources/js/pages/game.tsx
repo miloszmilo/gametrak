@@ -16,10 +16,30 @@ export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn:
             setIsLoading(false);
             return;
         }
-        fetch(`/update-game-status/${gameId}`, {
-            method: 'POST',
+        fetch('/token', { credentials: 'same-origin' }).then(async (res) => {
+            const data = await res.json();
+            const csrfToken = data.csrfToken;
+            console.log(csrfToken);
+            fetch(`/update-game-status/${gameId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    game_id: gameId,
+                    status: status,
+                }),
+                credentials: 'same-origin',
+            })
+                .then((res) => {
+                    setIsLoading(false);
+                    setError('');
+                    console.log(res);
+                })
+                .catch((err) => console.error(err));
         });
-        setIsLoading(false);
     }
 
     return (
@@ -50,6 +70,7 @@ export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn:
                     })}
             </ul>
             <select onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+                <option value="not planning">Not Planning</option>
                 <option value="planning">Plan to play</option>
                 <option value="playing">Playing</option>
                 <option value="completed">Completed</option>

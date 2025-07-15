@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameStatus\UpdateGameStatusController;
 use App\Models\Game;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,6 +42,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+});
+
+Route::get('/token', function (Request $request) {
+    // $token = $request->session()->token();
+    $token = csrf_token();
+    return response()->json(['csrfToken' => $token]);
 });
 
 require __DIR__.'/settings.php';
