@@ -16,7 +16,7 @@ test('returns correct items for \'dark\'', function () {
     $response = $this->get('/search/dark');
 
     $response
-        ->assertSee('Dark Souls', 'Dark Messiah of Might and Magic')
         ->assertSessionHasNoErrors()
-        ->assertOk();
+        ->assertOk()
+        ->assertSee('Dark Souls', 'Dark Messiah of Might and Magic');
 });

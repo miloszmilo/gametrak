@@ -16,14 +16,11 @@ class UpdateGameStatusController extends Controller {
      * Updates game status for user
      */
     public function store(Request $request): Response {
-        /* get game id
-        get game status
-        update status if exists in table
-        else create new entry */
         $request->validate([
             'game_id' => ['required', 'uuid:4', 'size:36'],
             'status' => ['required', Rule::in(GAME_STATUSES)],
         ]);
+
         $user_id = $request->user()->id;
         $game_id = $request->string('game_id')->trim();
         $status = $request->string('status')->trim();
