@@ -49,14 +49,13 @@ export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn:
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            {isLoggedIn && (
-                <select onChange={updateGameStatus} disabled={isLoading}>
-                    <option value="planning">Plan to play</option>
-                    <option value="playing">Playing</option>
-                    <option value="completed">Completed</option>
-                    <option value="dropped">Dropped</option>
-                </select>
-            )}
+            <select onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+                <option value="planning">Plan to play</option>
+                <option value="playing">Playing</option>
+                <option value="completed">Completed</option>
+                <option value="dropped">Dropped</option>
+            </select>
+            {!isLoggedIn && <span>Log in to update your game status!</span>}
             {error && <span>{error}</span>}
         </div>
     );

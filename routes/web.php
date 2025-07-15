@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameStatus\UpdateGameStatusController;
 use App\Models\Game;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,11 +17,22 @@ Route::get('/games', function () {
     ]);
 })->name('all_games');
 
+    // Route::get('/game/{uuid}', [UpdateGameStatusController::class, 'show'])->name('game');
+
 Route::get('/game/{uuid}', function ($id) {
+    $isLoggedIn = false;
+    if (Auth::check()) {
+        $isLoggedIn = true;
+    }
     $game = Game::where('id', $id)->first();
-    return Inertia::render('game', [
+    return Inertia::render("game", [
         'game' => $game,
+        'isLoggedIn' => $isLoggedIn
     ]);
+    // $game = Game::where('id', $id)->first();
+    // return Inertia::render('game', [
+    //     'game' => $game,
+    // ]);
 })->name('game');
 
 Route::get('/search/{name}', function ($name) {

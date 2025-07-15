@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\GameStatus;
 
 use App\Http\Controllers\Controller;
+use App\Models\Game;
 use App\Models\UserGameStatus;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -30,12 +32,22 @@ class UpdateGameStatusController extends Controller {
             ['status' => $status]
         ]);
     }
+
+    /**
+    * Show game status if user logged in
+    */
     public function show(Request $request): Response {
-        $loggedIn = false;
+        $isLoggedIn = false;
         if (Auth::check()) {
-            $loggedIn = true;
+            $isLoggedIn = true;
         }
-        Inertia::render('/game/' . $request->string('uuid'), ['isLoggedIn' => isLoggedIn]);
+        $game = Game::where('id', $request->string('id'))->first();
+        dd($request->string('uuid'));
+        return Inertia::render("game", [
+            'id' => $request->string('id'),
+            'game' => $game,
+            'isLoggedIn' => $isLoggedIn
+        ]);
 
     }
 }
