@@ -1,29 +1,16 @@
 import { useState } from 'react';
-import { GameStatus } from '../types/index.d.ts';
+import { type Game, GameStatus } from '../types/index.d.ts';
 
-export type Game = {
-    name: string;
-    release_year: string;
-    description: string;
-    studio: string;
-    publisher: string;
-    categories: string; // in db it's string array '[item1, item2]'
-    platforms: string; // in db it's string array '[item1, item2]'
-};
-
-export default function Game({ id, game }: { id: number; game: any }) {
+export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn: boolean }) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    function updateGameStatus(e) {
+
+    function updateGameStatus(e: React.ChangeEvent<HTMLSelectElement>) {
         setError('');
         setIsLoading(true);
-        console.log(e.target.value);
 
-        // get user id inside php
-        // for currently logged in user
-        // send request
         const gameId = game.id;
-        const status: GameStatus = e.target.value.trim().toLowerCase();
+        const status: GameStatus = e.target.value.trim().toLowerCase() as GameStatus;
         if (!Object.values(GameStatus).includes(status)) {
             setError("Game status isn't valid. Try again.");
             setIsLoading(false);
@@ -62,12 +49,14 @@ export default function Game({ id, game }: { id: number; game: any }) {
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <select onChange={updateGameStatus} disabled={isLoading}>
-                <option value="planning">Plan to play</option>
-                <option value="playing">Playing</option>
-                <option value="completed">Completed</option>
-                <option value="dropped">Dropped</option>
-            </select>
+            {isLoggedIn && (
+                <select onChange={updateGameStatus} disabled={isLoading}>
+                    <option value="planning">Plan to play</option>
+                    <option value="playing">Playing</option>
+                    <option value="completed">Completed</option>
+                    <option value="dropped">Dropped</option>
+                </select>
+            )}
             {error && <span>{error}</span>}
         </div>
     );

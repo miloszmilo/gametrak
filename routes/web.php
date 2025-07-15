@@ -19,7 +19,6 @@ Route::get('/games', function () {
 Route::get('/game/{uuid}', function ($id) {
     $game = Game::where('id', $id)->first();
     return Inertia::render('game', [
-        'id' => $id,
         'game' => $game,
     ]);
 })->name('game');

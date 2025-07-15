@@ -4,11 +4,8 @@ namespace App\Http\Controllers\GameStatus;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserGameStatus;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,7 +13,7 @@ $GAME_STATUSES = ['planning', 'playing', 'completed', 'dropped'];
 
 class UpdateGameStatusController extends Controller {
     /**
-     * Show the user's password settings page.
+     * Updates game status for user
      */
     public function store(Request $request): Response {
         /* get game id
@@ -36,20 +33,12 @@ class UpdateGameStatusController extends Controller {
             ['status' => $status]
         ]);
     }
+    public function show(Request $request): Response {
+        $loggedIn = false;
+        if (Auth::check()) {
+            $loggedIn = true;
+        }
+        Inertia::render('/game/' . $request->string('uuid'), ['isLoggedIn' => isLoggedIn]);
 
-    /**
-     * Update the user's password.
-     */
-    public function update(Request $request): RedirectResponse {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
-
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        return back();
     }
 }

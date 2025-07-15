@@ -48,3 +48,14 @@ export enum GameStatus {
     COMPLETED = 'completed',
     DROPPED = 'dropped',
 }
+
+export interface Game {
+    id: string;
+    name: string;
+    release_year: string;
+    description: string;
+    studio: string;
+    publisher: string;
+    categories: string; // in db it's string array '[item1, item2]'
+    platforms: string; // in db it's string array '[item1, item2]'
+}
