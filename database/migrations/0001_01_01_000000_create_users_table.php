@@ -21,6 +21,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        $user = App\Models\User::create([
+            'name' => "Admin",
+            'email' => 'admin@gametrak.tv',
+            'password' => 'admin123',
+        ]);
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

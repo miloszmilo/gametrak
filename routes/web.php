@@ -17,7 +17,6 @@ Route::get('/games', function () {
     ]);
 })->name('all_games');
 
-    // Route::get('/game/{uuid}', [UpdateGameStatusController::class, 'show'])->name('game');
 
 Route::get('/game/{uuid}', function ($id) {
     $isLoggedIn = false;
@@ -29,10 +28,6 @@ Route::get('/game/{uuid}', function ($id) {
         'game' => $game,
         'isLoggedIn' => $isLoggedIn
     ]);
-    // $game = Game::where('id', $id)->first();
-    // return Inertia::render('game', [
-    //     'game' => $game,
-    // ]);
 })->name('game');
 
 Route::get('/search/{name}', function ($name) {
