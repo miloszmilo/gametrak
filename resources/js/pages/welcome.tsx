@@ -12,11 +12,12 @@ export default function Welcome() {
         fetch(`/search/${search}`, {
             method: 'GET',
         }).then(async (r) => {
-            if (r.ok) window.location.href = `/search/${search}`;
-            else {
-                const error = await response.json();
-                console.error(error);
+            if (r.ok) {
+                window.location.href = `/search/${search}`;
+                return;
             }
+            const error = await r.json();
+            console.error(error);
         });
     }
 
