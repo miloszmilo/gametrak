@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { type Game, GameStatus } from '../types/index.d.ts';
 
-export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn: boolean }) {
+type Props = {
+    game: Game;
+    isLoggedIn: boolean;
+    status: GameStatus;
+};
+
+export default function GameSite({ game, isLoggedIn, status }: Props) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -69,7 +75,7 @@ export default function GameSite({ game, isLoggedIn }: { game: Game; isLoggedIn:
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <select onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+            <select defaultValue={status} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
                 <option value="not planning">Not Planning</option>
                 <option value="planning">Plan to play</option>
                 <option value="playing">Playing</option>

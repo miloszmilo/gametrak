@@ -26,40 +26,16 @@ class UpdateGameStatusController extends Controller {
         $user_id = Auth::id();
         $game_id = $request->string('game_id')->trim();
         $status = $request->string('status')->trim();
-        $integer_status = $this->statusToInteger($status);
 
         $db_query_status = UserGameStatus::updateOrCreate(
             ['user_id' => $user_id, 'game_id' => $game_id],
-            ['status' => $integer_status]
+            ['status' => $status]
         );
 
         if ($db_query_status->id) {
             return response(200);
         }
         return response(500);
-    }
-
-    private function statusToInteger(string $status): int {
-        switch ($status) {
-            case 'not planning':
-                return 0;
-                break;
-            case 'planning':
-                return 1;
-                break;
-            case 'playing':
-                return 2;
-                break;
-            case 'completed':
-                return 3;
-                break;
-            case 'dropped':
-                return 4;
-                break;
-            default:
-                return 0;
-                break;
-        }
     }
 
     /**

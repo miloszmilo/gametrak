@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('id');
             $table->uuid('user_id');
             $table->uuid('game_id');
-            $table->integer('status'); // 0 - not planned, 1 - planning, 2 - playing, 3 - finished, 4 - dropped
+            $table->string('status');
             $table->timestamps();
         });
 
@@ -26,7 +26,7 @@ return new class extends Migration
         $status = UserGameStatus::create([
             'user_id' => $user->id,
             'game_id' => $game->id,
-            'status' => 3,
+            'status' => 'playing',
         ]);
     }
 

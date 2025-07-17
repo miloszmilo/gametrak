@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameStatus\UpdateGameStatusController;
 use App\Models\Game;
+use App\Models\UserGameStatus;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,13 +22,20 @@ Route::get('/games', function () {
 
 Route::get('/game/{uuid}', function ($id) {
     $isLoggedIn = false;
+    $user_id = "-1";
     if (Auth::check()) {
         $isLoggedIn = true;
+        $user_id = Auth::id();
     }
     $game = Game::where('id', $id)->first();
+    $status = UserGameStatus::where([
+        'game_id' => $game->id,
+        'user_id' => $user_id
+    ])->first();
     return Inertia::render("game", [
         'game' => $game,
-        'isLoggedIn' => $isLoggedIn
+        'isLoggedIn' => $isLoggedIn,
+        'status' => $status->status,
     ]);
 })->name('game');
 
