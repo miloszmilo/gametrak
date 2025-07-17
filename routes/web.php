@@ -45,7 +45,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/token', function (Request $request) {
-    // $token = $request->session()->token();
     $token = csrf_token();
     return response()->json(['csrfToken' => $token]);
 });

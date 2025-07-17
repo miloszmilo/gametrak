@@ -28,12 +28,14 @@ class UpdateGameStatusController extends Controller {
         $status = $request->string('status')->trim();
         $integer_status = $this->statusToInteger($status);
 
-        UserGameStatus::updateOrCreate([
+        UserGameStatus::updateOrCreate(
             ['user_id' => $user_id, 'game_id' => $game_id],
             ['status' => $integer_status]
-        ]);
+        );
 
-        return back()->with('status', 'updated successfully');
+        return response(200);
+        // return back()->with('status', 'updated successfully');
+        // return back();
     }
 
     private function statusToInteger(string $status): int {
