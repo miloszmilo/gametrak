@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Game;
 use App\Models\UserGameStatus;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Inertia\Response;
 
 const VALID_GAME_STATUSES = ['not planning', 'planning', 'playing', 'completed', 'dropped'];
 
@@ -28,14 +28,15 @@ class UpdateGameStatusController extends Controller {
         $status = $request->string('status')->trim();
         $integer_status = $this->statusToInteger($status);
 
-        UserGameStatus::updateOrCreate(
+        $db_query_status = UserGameStatus::updateOrCreate(
             ['user_id' => $user_id, 'game_id' => $game_id],
             ['status' => $integer_status]
         );
 
-        return response(200);
-        // return back()->with('status', 'updated successfully');
-        // return back();
+        if ($db_query_status->id) {
+            return response(200);
+        }
+        return response(500);
     }
 
     private function statusToInteger(string $status): int {
