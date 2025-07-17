@@ -75,7 +75,7 @@ export default function GameSite({ game, isLoggedIn, status }: Props) {
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <select defaultValue={status} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+            <select defaultValue={status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
                 <option value="not planning">Not Planning</option>
                 <option value="planning">Plan to play</option>
                 <option value="playing">Playing</option>

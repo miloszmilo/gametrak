@@ -11,15 +11,6 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-# HACK: get all games list to find the uuid
-Route::get('/games', function () {
-    $games = Game::all();
-    return Inertia::render('games', [
-        'games' => $games,
-    ]);
-})->name('all_games');
-
-
 Route::get('/game/{uuid}', function ($id) {
     $isLoggedIn = false;
     $user_id = "-1";
@@ -32,6 +23,10 @@ Route::get('/game/{uuid}', function ($id) {
         'game_id' => $game->id,
         'user_id' => $user_id
     ])->first();
+    if (!$status) {
+        $status = new stdClass();
+        $status->status = 'not planning';
+    }
     return Inertia::render("game", [
         'game' => $game,
         'isLoggedIn' => $isLoggedIn,

@@ -1,15 +1,16 @@
 export default function ({ games }: { games: Array<any> }) {
     return (
         <div>
-            <ul>
+            <ol>
                 {games.map((game, index) => {
                     return (
-                        <li key="index">
-                            {game.uuid} {game.name}
+                        <li className="flex flex-row gap-2" key="index">
+                            {game.name}
+                            <a href={`/game/${game.id}`}>Go to game</a>
                         </li>
                     );
                 })}
-            </ul>
+            </ol>
         </div>
     );
 }
