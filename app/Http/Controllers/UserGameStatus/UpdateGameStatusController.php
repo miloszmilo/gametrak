@@ -28,42 +28,14 @@ class UpdateGameStatusController extends Controller {
         $user_id = Auth::id();
         $game_id = $request->string('game_id')->trim();
         $status = $request->string('status')->trim();
-        $rating = $request->string('rating')->trim();
-        try {
-            $rating = (int)$rating;
-
-            $db_query_status = UserGameStatus::updateOrCreate(
-                ['user_id' => $user_id, 'game_id' => $game_id],
-                ['status' => $status, 'rating' => $rating]
-            );
-        } catch (Exception $e) {
-            $db_query_status = UserGameStatus::updateOrCreate(
-                ['user_id' => $user_id, 'game_id' => $game_id],
-                ['status' => $status]
-            );
-        } finally {
-            if ($db_query_status->id) {
-                return response(200);
-            }
-            return response(500);
+        $rating = $request->integer('rating');
+        $db_query_status = UserGameStatus::updateOrCreate(
+            ['user_id' => $user_id, 'game_id' => $game_id],
+            ['status' => $status, 'rating' => $rating]
+        );
+        if ($db_query_status->id) {
+            return response(200);
         }
-
-    }
-
-    /**
-    * Show game status if user logged in
-    */
-    public function show(Request $request): Response {
-        $isLoggedIn = false;
-        if (Auth::check()) {
-            $isLoggedIn = true;
-        }
-        $game = Game::where('id', $request->string('id'))->first();
-        return Inertia::render("game", [
-            'id' => $request->string('id'),
-            'game' => $game,
-            'isLoggedIn' => $isLoggedIn
-        ]);
-
+        return response(500);
     }
 }

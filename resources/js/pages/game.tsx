@@ -10,7 +10,6 @@ type Props = {
 export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    console.log(_rating);
     const [rating, setRating] = useState<number>(_rating);
     const [status, setStatus] = useState<GameStatus>(_status);
 
@@ -64,9 +63,14 @@ export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) 
                 .then((res) => {
                     setIsLoading(false);
                     setError('');
-                    console.log(res);
+
+                    _status = status;
+                    _rating = rating;
                 })
-                .catch((err) => console.error(err));
+                .catch((err) => {
+                    setError('Something went wrong with the request. Try again later.');
+                    console.error(err);
+                });
         });
     }
 
@@ -117,7 +121,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) 
                     max="100"
                     step="1"
                     className="peer invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
-                    placeholder="52"
+                    placeholder={`${Math.round(Math.random() * 100)}`}
                     pattern="\d{1,3}"
                 ></input>
                 {(rating !== _rating || status !== _status) && <span className="text-blue-500">You have unsaved changes.</span>}
