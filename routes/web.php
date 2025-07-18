@@ -30,7 +30,8 @@ Route::get('/game/{uuid}', function ($id) {
     return Inertia::render("game", [
         'game' => $game,
         'isLoggedIn' => $isLoggedIn,
-        'status' => $status->status,
+        '_status' => $status->status,
+        '_rating' => $status->rating,
     ]);
 })->name('game');
 

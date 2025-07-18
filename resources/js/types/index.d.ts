@@ -43,6 +43,7 @@ export interface User {
 }
 
 export enum GameStatus {
+    NOT_PLANNING = 'not planning',
     PLANNING = 'planning',
     PLAYING = 'playing',
     COMPLETED = 'completed',

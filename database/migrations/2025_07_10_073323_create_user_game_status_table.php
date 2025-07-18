@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->uuid('game_id');
             $table->string('status');
+            $table->integer('rating');
             $table->timestamps();
         });
 
@@ -27,6 +28,7 @@ return new class extends Migration
             'user_id' => $user->id,
             'game_id' => $game->id,
             'status' => 'playing',
+            'rating' => 50,
         ]);
     }
 

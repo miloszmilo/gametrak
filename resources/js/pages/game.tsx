@@ -7,25 +7,46 @@ type Props = {
     status: GameStatus;
 };
 
-export default function GameSite({ game, isLoggedIn, status }: Props) {
+export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    console.log(_rating);
+    const [rating, setRating] = useState<number>(_rating);
+    const [status, setStatus] = useState<GameStatus>(_status);
+
+    function updateRating(e: React.ChangeEvent<HTMLInputElement>) {
+        try {
+            const inputRating = Number(e.target.value);
+            const finalRating = Math.min(100, Math.max(0, inputRating));
+            setRating(finalRating);
+        } catch (err) {
+            console.error(err);
+            return;
+        }
+    }
 
     function updateGameStatus(e: React.ChangeEvent<HTMLSelectElement>) {
         setError('');
         setIsLoading(true);
 
-        const gameId = game.id;
         const status: GameStatus = e.target.value.trim().toLowerCase() as GameStatus;
+
         if (!Object.values(GameStatus).includes(status)) {
             setError("Game status isn't valid. Try again.");
             setIsLoading(false);
             return;
         }
+        setStatus(status);
+        setIsLoading(false);
+    }
+
+    function submitForm(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const gameId = game.id;
+
         fetch('/token', { credentials: 'same-origin' }).then(async (res) => {
             const data = await res.json();
             const csrfToken = data.csrfToken;
-            console.log(csrfToken);
             fetch(`/update-game-status/${gameId}`, {
                 method: 'POST',
                 headers: {
@@ -36,6 +57,7 @@ export default function GameSite({ game, isLoggedIn, status }: Props) {
                 body: JSON.stringify({
                     game_id: gameId,
                     status: status,
+                    rating: rating,
                 }),
                 credentials: 'same-origin',
             })
@@ -75,15 +97,35 @@ export default function GameSite({ game, isLoggedIn, status }: Props) {
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <select defaultValue={status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
-                <option value="not planning">Not Planning</option>
-                <option value="planning">Plan to play</option>
-                <option value="playing">Playing</option>
-                <option value="completed">Completed</option>
-                <option value="dropped">Dropped</option>
-            </select>
-            {!isLoggedIn && <span>Log in to update your game status!</span>}
-            {error && <span>{error}</span>}
+            <form onSubmit={submitForm}>
+                <select defaultValue={status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+                    <option value="not planning">Not Planning</option>
+                    <option value="planning">Plan to play</option>
+                    <option value="playing">Playing</option>
+                    <option value="completed">Completed</option>
+                    <option value="dropped">Dropped</option>
+                </select>
+                {!isLoggedIn && <span>Log in to update your game status!</span>}
+                {error && <span>{error}</span>}
+
+                <input
+                    defaultValue={rating ?? ''}
+                    onInput={updateRating}
+                    disabled={isLoading || !isLoggedIn}
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="1"
+                    className="peer invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
+                    placeholder="52"
+                    pattern="\d{1,3}"
+                ></input>
+                {(rating !== _rating || status !== _status) && <span className="text-blue-500">You have unsaved changes.</span>}
+                <span className="hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    Rating must be in range 0-100 and a whole number!
+                </span>
+                <button type="submit">Save</button>
+            </form>
         </div>
     );
 }

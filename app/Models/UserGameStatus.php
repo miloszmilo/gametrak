@@ -13,6 +13,7 @@ class UserGameStatus extends Model
 
     public $fillable = [
         'status',
+        'rating',
         'user_id',
         'game_id'
     ];
