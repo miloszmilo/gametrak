@@ -4,20 +4,34 @@ import { type Game, GameStatus } from '../types/index.d.ts';
 type Props = {
     game: Game;
     isLoggedIn: boolean;
-    status: GameStatus;
+    _status: GameStatus;
+    _rating: number;
+    _playtime: number;
 };
 
-export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) {
+export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime }: Props) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [rating, setRating] = useState<number>(_rating);
     const [status, setStatus] = useState<GameStatus>(_status);
+    const [playtime, setPlaytime] = useState<number>(_playtime);
 
     function updateRating(e: React.ChangeEvent<HTMLInputElement>) {
         try {
             const inputRating = Number(e.target.value);
             const finalRating = Math.min(100, Math.max(0, inputRating));
             setRating(finalRating);
+        } catch (err) {
+            console.error(err);
+            return;
+        }
+    }
+
+    function updatePlaytime(e: React.ChangeEvent<HTMLInputElement>) {
+        try {
+            const inputPlaytime = Number(e.target.value);
+            const finalPlaytime = Math.min(100, Math.max(0, inputPlaytime));
+            setPlaytime(finalPlaytime);
         } catch (err) {
             console.error(err);
             return;
@@ -124,11 +138,24 @@ export default function GameSite({ game, isLoggedIn, _status, _rating }: Props) 
                     placeholder={`${Math.round(Math.random() * 100)}`}
                     pattern="\d{1,3}"
                 ></input>
-                {(rating !== _rating || status !== _status) && <span className="text-blue-500">You have unsaved changes.</span>}
+                <input
+                    defaultValue={playtime ?? ''}
+                    onInput={updatePlaytime}
+                    disabled={isLoading || !isLoggedIn}
+                    type="number"
+                    min="0"
+                    max="99999"
+                    step="1"
+                    pattern="\d{1,5}"
+                    placeholder="1000"
+                ></input>
+                {false && (rating !== _rating || status !== _status) && <span className="text-blue-500">You have unsaved changes.</span>}
                 <span className="hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                     Rating must be in range 0-100 and a whole number!
                 </span>
-                <button type="submit">Save</button>
+                <button type="submit" className="cursor:pointer rounded-md bg-blue-500 p-2">
+                    Save
+                </button>
             </form>
         </div>
     );
