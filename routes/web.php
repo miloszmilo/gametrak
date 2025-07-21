@@ -47,7 +47,16 @@ Route::get('/search/{name}', function ($name) {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        $user_id = Auth::id();
+        $username = "John Schmoe";
+        $games = DB::table('user_game_statuses')
+            ->join('games', 'games.id','=','game_id')
+            ->where('user_id', '=', $user_id)
+            ->get();
+        return Inertia::render('dashboard', [
+            'games' => $games,
+            'username' => $username
+        ]);
     })->name('dashboard');
 });
 

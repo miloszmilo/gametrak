@@ -145,7 +145,6 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                     pattern="\d{1,5}"
                     placeholder="1000"
                 ></input>
-                {false && (rating !== _rating || status !== _status) && <span className="text-blue-500">You have unsaved changes.</span>}
                 <span className="hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                     Rating must be in range 0-100 and a whole number!
                 </span>
