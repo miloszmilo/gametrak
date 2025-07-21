@@ -26,12 +26,15 @@ Route::get('/game/{uuid}', function ($id) {
     if (!$status) {
         $status = new stdClass();
         $status->status = 'not planning';
+        $status->rating = '';
+        $status->playtime = '';
     }
     return Inertia::render("game", [
         'game' => $game,
         'isLoggedIn' => $isLoggedIn,
         '_status' => $status->status,
         '_rating' => $status->rating,
+        '_playtime' => $status->playtime,
     ]);
 })->name('game');
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->uuid('game_id');
             $table->string('status');
             $table->integer('rating');
+            $table->integer('playtime');
             $table->timestamps();
         });
 
@@ -29,6 +30,7 @@ return new class extends Migration
             'game_id' => $game->id,
             'status' => 'playing',
             'rating' => 50,
+            'playtime' => 100,
         ]);
     }
 

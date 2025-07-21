@@ -12,8 +12,8 @@ type Props = {
 export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime }: Props) {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [rating, setRating] = useState<number>(_rating);
     const [status, setStatus] = useState<GameStatus>(_status);
+    const [rating, setRating] = useState<number>(_rating);
     const [playtime, setPlaytime] = useState<number>(_playtime);
 
     function updateRating(e: React.ChangeEvent<HTMLInputElement>) {
@@ -30,7 +30,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
     function updatePlaytime(e: React.ChangeEvent<HTMLInputElement>) {
         try {
             const inputPlaytime = Number(e.target.value);
-            const finalPlaytime = Math.min(100, Math.max(0, inputPlaytime));
+            const finalPlaytime = Math.min(99999, Math.max(0, inputPlaytime));
             setPlaytime(finalPlaytime);
         } catch (err) {
             console.error(err);
@@ -40,20 +40,19 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
 
     function updateGameStatus(e: React.ChangeEvent<HTMLSelectElement>) {
         setError('');
-        setIsLoading(true);
 
         const status: GameStatus = e.target.value.trim().toLowerCase() as GameStatus;
 
         if (!Object.values(GameStatus).includes(status)) {
             setError("Game status isn't valid. Try again.");
-            setIsLoading(false);
             return;
         }
         setStatus(status);
-        setIsLoading(false);
     }
 
     function submitForm(e: React.FormEvent<HTMLFormElement>) {
+        setError('');
+        setIsLoading(true);
         e.preventDefault();
         const gameId = game.id;
 
@@ -71,19 +70,16 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                     game_id: gameId,
                     status: status,
                     rating: rating,
+                    playtime: playtime,
                 }),
                 credentials: 'same-origin',
             })
-                .then((res) => {
-                    setIsLoading(false);
-                    setError('');
-
-                    _status = status;
-                    _rating = rating;
-                })
                 .catch((err) => {
                     setError('Something went wrong with the request. Try again later.');
                     console.error(err);
+                })
+                .finally(() => {
+                    setIsLoading(false);
                 });
         });
     }
@@ -116,7 +112,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                     })}
             </ul>
             <form onSubmit={submitForm}>
-                <select defaultValue={status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+                <select defaultValue={_status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
                     <option value="not planning">Not Planning</option>
                     <option value="planning">Plan to play</option>
                     <option value="playing">Playing</option>
@@ -127,7 +123,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                 {error && <span>{error}</span>}
 
                 <input
-                    defaultValue={rating ?? ''}
+                    defaultValue={_rating ?? ''}
                     onInput={updateRating}
                     disabled={isLoading || !isLoggedIn}
                     type="number"
@@ -139,7 +135,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                     pattern="\d{1,3}"
                 ></input>
                 <input
-                    defaultValue={playtime ?? ''}
+                    defaultValue={_playtime ?? ''}
                     onInput={updatePlaytime}
                     disabled={isLoading || !isLoggedIn}
                     type="number"

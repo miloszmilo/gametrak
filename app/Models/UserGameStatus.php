@@ -14,6 +14,7 @@ class UserGameStatus extends Model
     public $fillable = [
         'status',
         'rating',
+        'playtime',
         'user_id',
         'game_id'
     ];
