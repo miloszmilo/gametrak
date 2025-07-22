@@ -1,9 +1,7 @@
-import { type SharedData } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
     const [search, setSearch] = useState<string>('');
 
     function submit(e: FormEvent<HTMLFormElement>) {
@@ -24,12 +22,24 @@ export default function Welcome() {
     return (
         <>
             <Head title="Home"></Head>
-            <form onSubmit={submit} className="border-2 border-red-500">
-                <input value={search} type="text" onChange={(e) => setSearch(e.target.value)} className="bg-blue-500"></input>
-                <button type="submit" onClick={() => submit}>
-                    Search
-                </button>
-            </form>
+            <main className="mt-64 flex min-h-[100%] min-w-[100%] flex-col items-center justify-items-center">
+                <form className="flex flex-row">
+                    <input
+                        value={search}
+                        type="text"
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="rounded-l-full bg-neutral-800 px-4 py-2 text-neutral-200"
+                        placeholder="Search by game name"
+                    ></input>
+                    <button
+                        type="submit"
+                        onClick={submit}
+                        className="cursor-pointer rounded-r-full bg-orange-300 px-2 text-orange-900 hover:bg-orange-200 hover:text-orange-800"
+                    >
+                        Search
+                    </button>
+                </form>
+            </main>
         </>
     );
 }
