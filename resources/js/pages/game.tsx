@@ -87,13 +87,14 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
     return (
         <div>
             <div>
-                <h1>{game.name}</h1>
-                <span>{game.release_year}</span>
+                <h1 className="text-lg font-semibold">{game.name}</h1>
+                <span className="text-sm">{game.release_year}</span>
             </div>
             <p>{game.description}</p>
-            <p>{game.studio}</p>
-            <p>{game.publisher}</p>
+            <p>Studio: {game.studio}</p>
+            <p>Publisher: {game.publisher}</p>
             <ul>
+                <caption>Categories:</caption>
                 {game.categories
                     .replace('[', '')
                     .replace(']', '')
@@ -103,6 +104,7 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                     })}
             </ul>
             <ul>
+                <caption>Platforms:</caption>
                 {game.platforms
                     .replace('[', '')
                     .replace(']', '')
@@ -111,40 +113,50 @@ export default function GameSite({ game, isLoggedIn, _status, _rating, _playtime
                         return <li key={index}>{platform}</li>;
                     })}
             </ul>
-            <form onSubmit={submitForm}>
-                <select defaultValue={_status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
-                    <option value="not planning">Not Planning</option>
-                    <option value="planning">Plan to play</option>
-                    <option value="playing">Playing</option>
-                    <option value="completed">Completed</option>
-                    <option value="dropped">Dropped</option>
-                </select>
+            <h2>Did you play the game? If so rate it and share your total playtime!</h2>
+            <form onSubmit={submitForm} className="mt-4 flex w-fit flex-col">
+                <div className="flex flex-row justify-between">
+                    <caption>Status:</caption>
+                    <select defaultValue={_status ?? 'not planning'} onChange={updateGameStatus} disabled={isLoading || !isLoggedIn}>
+                        <option value="not planning">Not Planning</option>
+                        <option value="planning">Plan to play</option>
+                        <option value="playing">Playing</option>
+                        <option value="completed">Completed</option>
+                        <option value="dropped">Dropped</option>
+                    </select>
+                </div>
                 {!isLoggedIn && <span>Log in to update your game status!</span>}
                 {error && <span>{error}</span>}
 
-                <input
-                    defaultValue={_rating ?? ''}
-                    onInput={updateRating}
-                    disabled={isLoading || !isLoggedIn}
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="1"
-                    className="peer invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
-                    placeholder={`${Math.round(Math.random() * 100)}`}
-                    pattern="\d{1,3}"
-                ></input>
-                <input
-                    defaultValue={_playtime ?? ''}
-                    onInput={updatePlaytime}
-                    disabled={isLoading || !isLoggedIn}
-                    type="number"
-                    min="0"
-                    max="99999"
-                    step="1"
-                    pattern="\d{1,5}"
-                    placeholder="1000"
-                ></input>
+                <div className="flex flex-row justify-between">
+                    <caption>Rating:</caption>
+                    <input
+                        defaultValue={_rating ?? ''}
+                        onInput={updateRating}
+                        disabled={isLoading || !isLoggedIn}
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        className="peer invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
+                        placeholder={`${Math.round(Math.random() * 100)}`}
+                        pattern="\d{1,3}"
+                    ></input>
+                </div>
+                <div className="flex flex-row justify-between">
+                    <caption>Playtime in hours:</caption>
+                    <input
+                        defaultValue={_playtime ?? ''}
+                        onInput={updatePlaytime}
+                        disabled={isLoading || !isLoggedIn}
+                        type="number"
+                        min="0"
+                        max="99999"
+                        step="1"
+                        pattern="\d{1,5}"
+                        placeholder="1000"
+                    ></input>
+                </div>
                 <span className="hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                     Rating must be in range 0-100 and a whole number!
                 </span>
